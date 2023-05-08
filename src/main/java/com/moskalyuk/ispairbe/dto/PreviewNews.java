@@ -3,6 +3,7 @@ package com.moskalyuk.ispairbe.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -10,8 +11,10 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@ToString
 public class PreviewNews {
-    Integer id;
+
+    Long id;
 
     String name;
 

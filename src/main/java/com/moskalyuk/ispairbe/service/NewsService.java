@@ -25,11 +25,14 @@ public class NewsService {
 
     private final NewsMapper newsMapper;
 
+    private final Map<Long,NewsResponse> cache= new TreeMap<>();
+
     public List<PreviewNews> getNews(){
 
         RequestEntity<Void> requestEntity= RequestEntity.get(URI.create("https://hacker-news.firebaseio.com/v0/newstories.json"))
                 .build();
         long[] body = restTemplate.exchange(requestEntity, long[].class).getBody();
+
         return Optional.ofNullable(body).stream()
                 .flatMapToLong(Arrays::stream)
                 .limit(100)
@@ -45,11 +48,21 @@ public class NewsService {
                 .orElseThrow();
     }
     private NewsResponse sendRequest(Long id){
+
+        if (cache.containsKey(id)){
+            return cache.get(id);
+        }
+
         RequestEntity<Void> requestEntity= RequestEntity.get(URI.create(String.format("https://hacker-news.firebaseio.com/v0/item/%s.json",id)))
                 .build();
-        return restTemplate.exchange(requestEntity, NewsResponse.class).getBody();
+        NewsResponse response = restTemplate.exchange(requestEntity, NewsResponse.class).getBody();
 
+        if(cache.size()==100)
+            cache.keySet().stream().findFirst()
+                    .ifPresent(cache::remove);
+
+        cache.put(id,response);
+        return response;
     }
-
 
 }

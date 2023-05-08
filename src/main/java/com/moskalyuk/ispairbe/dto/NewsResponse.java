@@ -8,7 +8,7 @@ import lombok.Getter;
 public class NewsResponse {
 
     @JsonProperty("id")
-    Integer id;
+    Long id;
 
     @JsonProperty("title")
     String name;
@@ -24,9 +24,6 @@ public class NewsResponse {
 
     @JsonProperty("descendants")
     Integer commentsCount;
-
-//    @JsonProperty("kids")
-//    long[] comments;
 
     @JsonProperty("url")
     String link;
